@@ -1,0 +1,7 @@
+requests==2.25.1  # Намеренно старая версия с уязвимостями для safety
+pytest
+pytest-cov
+ruff
+mypy
+bandit
+safety

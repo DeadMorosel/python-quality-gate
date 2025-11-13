@@ -1,0 +1,47 @@
+name: Quality Gate Check
+
+on: [push, pull_request]
+
+jobs:
+  quality-gate:
+    name: Run Quality Gates
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    # 1. Проверка тестового покрытия
+    - name: Run tests with coverage
+      run: |
+        pip install pytest-cov
+        pytest --cov=src --cov-report=xml --cov-fail-under=80 tests/
+
+    # 2. Проверка стиля кода (Ruff)
+    - name: Run Ruff linter
+      run: |
+        ruff check src/ tests/
+
+    # 3. Проверка типов (Mypy)
+    - name: Run Mypy type checker
+      run: |
+        mypy src/
+
+    # 4. Проверка безопасности кода (Bandit)
+    - name: Run Bandit security scanner
+      run: |
+        bandit -r src/
+
+    # 5. Проверка уязвимостей в зависимостях (Safety)
+    - name: Run Safety check
+      run: |
+        safety check
