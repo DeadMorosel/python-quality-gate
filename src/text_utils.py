@@ -1,13 +1,10 @@
 import subprocess
 
-# Намеренно нет аннотаций типов
-def reverse_string(s):
+def reverse_string(s: str) -> str:
     return s[::-1]
 
-def is_palindrome(s):
+def is_palindrome(s: str) -> bool:
     return s == s[::-1]
 
-# Намеренно небезопасный вызов для bandit
-def run_shell_command(command):
-    # Bandit должен обнаружить эту уязвимость!
-    return subprocess.call(command, shell=True)
+def run_shell_command(command: list[str]) -> int:
+    return subprocess.call(command, shell=False)
